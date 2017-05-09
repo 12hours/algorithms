@@ -3,45 +3,44 @@ package unionfind;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class UnionFindEagerImplTest {
-
+public class UnionFindLazyImplTest {
 	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void largeNTest() {
-		UnionFind uf = new UnionFindEagerImpl(Integer.MAX_VALUE + 1);
+		UnionFind uf = new UnionFindLazyImpl(Integer.MAX_VALUE + 1);
 	}
 
 	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void lessThanZeroNTest() {
-		UnionFind uf = new UnionFindEagerImpl(-1);
+		UnionFind uf = new UnionFindLazyImpl(-1);
 	}
 
 	@Test
 	public void emptyArrayIfConnectedTest() {
-		UnionFind uf = new UnionFindEagerImpl(0);
+		UnionFind uf = new UnionFindLazyImpl(0);
 		Assert.assertFalse(uf.connected(1, 2));
 	}
 
 	@Test
 	public void emptyArrayCountTest() {
-		UnionFind uf = new UnionFindEagerImpl(0);
+		UnionFind uf = new UnionFindLazyImpl(0);
 		Assert.assertEquals(uf.count(), 0);
 	}
 
 	@Test
 	public void emptyArrayFindTest() {
-		UnionFind uf = new UnionFindEagerImpl(0);
+		UnionFind uf = new UnionFindLazyImpl(0);
 		Assert.assertEquals(uf.find(0), -1);
 	}
 
 	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void emptyArrayUnionTest() {
-		UnionFind uf = new UnionFindEagerImpl(0);
+		UnionFind uf = new UnionFindLazyImpl(0);
 		uf.union(0, 1);
 	}
 
 	@Test
 	public void unionTest1() {
-		UnionFind uf = new UnionFindEagerImpl(12);
+		UnionFind uf = new UnionFindLazyImpl(12);
 		uf.union(0, 1); // set1 {0,1}
 		uf.union(2, 3); // set2 {2,3}
 		uf.union(0, 3);
@@ -50,7 +49,7 @@ public class UnionFindEagerImplTest {
 
 	@Test
 	public void unionTest2() {
-		UnionFind uf = new UnionFindEagerImpl(12);
+		UnionFind uf = new UnionFindLazyImpl(12);
 		uf.union(0, 1);
 		uf.union(2, 3);
 		uf.union(0, 3);
@@ -59,7 +58,7 @@ public class UnionFindEagerImplTest {
 
 	@Test
 	public void unionTest3() {
-		UnionFind uf = new UnionFindEagerImpl(12);
+		UnionFind uf = new UnionFindLazyImpl(12);
 		// set 1 {1,4,8,9}
 		uf.union(1, 4);
 		uf.union(4, 8);
