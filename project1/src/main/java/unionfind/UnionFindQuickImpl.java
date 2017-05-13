@@ -40,12 +40,18 @@ public class UnionFindQuickImpl implements UnionFind {
 	@Override
 	public int find(int p) {
 		
-		int root = idArray[p];
-		while(root != p){
-			p = idArray[root];
-			root = idArray[p];
+//		int root = idArray[p];
+//		while(root != p){
+//			p = idArray[root];
+//			root = idArray[p];
+//		}
+//		return root;
+		
+		while (p != idArray[p]){
+			idArray[p] = idArray[idArray[p]];
+			p = idArray[p];
 		}
-		return root;
+		return p;
 
 	}
 
