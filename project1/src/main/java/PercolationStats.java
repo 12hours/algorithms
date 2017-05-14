@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.StdStats;
 import java.util.Arrays;
 
 public class PercolationStats {
-    int[] results;
+    private int[] results;
 
     /**
      * @param n
