@@ -142,6 +142,8 @@ public class Percolation implements PercolationInterface {
     private int openCount = 0;
     private GridExtended grid;
     private WeightedQuickUnionUF uf;
+    private WeightedQuickUnionUF topUf;
+
 
     /**
      * @param n size of grid side
@@ -153,6 +155,7 @@ public class Percolation implements PercolationInterface {
 
         this.grid = new GridExtended(n);
         this.uf = new WeightedQuickUnionUF((n * n) + 2);
+        this.topUf = new WeightedQuickUnionUF((n * n) + 2);
     }
 
     /**
@@ -174,10 +177,12 @@ public class Percolation implements PercolationInterface {
 
         if (top == -1) {
             uf.union(current, TOP_VIRT);
+            topUf.union(current, TOP_VIRT);
         } else {
             int[] coordinates = this.grid.convert1Dto2D(top);
             if (this.isOpen(coordinates[0], coordinates[1])) {
                 uf.union(current, top);
+                topUf.union(current, top);
             }
         }
 
@@ -187,19 +192,24 @@ public class Percolation implements PercolationInterface {
             int[] coordinates = this.grid.convert1Dto2D(bot);
             if (this.isOpen(coordinates[0], coordinates[1])) {
                 uf.union(current, bot);
+                topUf.union(current, bot);
             }
         }
 
         if (left != -1) {
             int[] coordinates = this.grid.convert1Dto2D(left);
-            if (this.isOpen(coordinates[0], coordinates[1]))
+            if (this.isOpen(coordinates[0], coordinates[1])) {
                 uf.union(current, left);
+                topUf.union(current, left);
+            }
         }
 
         if (right != -1) {
             int[] coordinates = this.grid.convert1Dto2D(right);
-            if (this.isOpen(coordinates[0], coordinates[1]))
+            if (this.isOpen(coordinates[0], coordinates[1])) {
                 uf.union(current, right);
+                topUf.union(current, right);
+            }
         }
     }
 
@@ -221,7 +231,7 @@ public class Percolation implements PercolationInterface {
     @Override
     public boolean isFull(int row, int col) {
         int current = this.grid.convert2Dto1D(row, col);
-        return this.uf.connected(current, TOP_VIRT);
+        return (this.uf.connected(current, TOP_VIRT) && this.topUf.connected(current, TOP_VIRT));
     }
 
     /**
