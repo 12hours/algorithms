@@ -8,7 +8,7 @@ import org.junit.Test;
 public class PercolationGridTest {
     private static class PercMock extends Percolation {
         public PercMock() {
-            super(0);
+            super(1);
         }
 
         private class TestGrid extends Grid {

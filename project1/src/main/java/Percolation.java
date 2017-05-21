@@ -3,14 +3,14 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 /**
  *
  */
-public class Percolation implements PercolationInterface {
+public class Percolation {
 
-    protected class Grid {
+    private class Grid {
         private int[][] grid;
         private int size;
 
         public Grid(int n) {
-            if (n < 0)
+            if (n <= 0)
                 throw new IllegalArgumentException();
             this.size = n;
             this.grid = new int[this.size][this.size];
@@ -35,7 +35,7 @@ public class Percolation implements PercolationInterface {
         }
     }
 
-    protected class GridExtended extends Grid {
+    private class GridExtended extends Grid {
         // Handles coordinates as 1...N
 
         public GridExtended(int N) {
@@ -51,8 +51,8 @@ public class Percolation implements PercolationInterface {
 
         // this public converter takes coordinates in outer format
         public int convert2Dto1D(int i, int j) {
-            if (i < 1 || j < 1)
-                throw new IllegalArgumentException();
+            if (i < 1 || j < 1 || i > this.getSize() || j > this.getSize())
+                throw new IndexOutOfBoundsException();
             i = convertToInnerCoordinate(i);
             j = convertToInnerCoordinate(j);
             return convertToOneD(i, j);
@@ -142,6 +142,8 @@ public class Percolation implements PercolationInterface {
     private int openCount = 0;
     private GridExtended grid;
     private WeightedQuickUnionUF uf;
+    private WeightedQuickUnionUF topUf;
+
 
     /**
      * @param n size of grid side
@@ -153,6 +155,7 @@ public class Percolation implements PercolationInterface {
 
         this.grid = new GridExtended(n);
         this.uf = new WeightedQuickUnionUF((n * n) + 2);
+        this.topUf = new WeightedQuickUnionUF((n * n) + 2);
     }
 
     /**
@@ -161,8 +164,10 @@ public class Percolation implements PercolationInterface {
      * @param row row number
      * @param col column number
      */
-    @Override
     public void open(int row, int col) {
+        if (this.grid.get(row, col) == 1)
+            return;
+
         this.grid.set(row, col, 1);
         this.openCount++;
 
@@ -174,10 +179,12 @@ public class Percolation implements PercolationInterface {
 
         if (top == -1) {
             uf.union(current, TOP_VIRT);
+            topUf.union(current, TOP_VIRT);
         } else {
             int[] coordinates = this.grid.convert1Dto2D(top);
             if (this.isOpen(coordinates[0], coordinates[1])) {
                 uf.union(current, top);
+                topUf.union(current, top);
             }
         }
 
@@ -187,19 +194,24 @@ public class Percolation implements PercolationInterface {
             int[] coordinates = this.grid.convert1Dto2D(bot);
             if (this.isOpen(coordinates[0], coordinates[1])) {
                 uf.union(current, bot);
+                topUf.union(current, bot);
             }
         }
 
         if (left != -1) {
             int[] coordinates = this.grid.convert1Dto2D(left);
-            if (this.isOpen(coordinates[0], coordinates[1]))
+            if (this.isOpen(coordinates[0], coordinates[1])) {
                 uf.union(current, left);
+                topUf.union(current, left);
+            }
         }
 
         if (right != -1) {
             int[] coordinates = this.grid.convert1Dto2D(right);
-            if (this.isOpen(coordinates[0], coordinates[1]))
+            if (this.isOpen(coordinates[0], coordinates[1])) {
                 uf.union(current, right);
+                topUf.union(current, right);
+            }
         }
     }
 
@@ -208,7 +220,6 @@ public class Percolation implements PercolationInterface {
      * @param col number
      * @return if this site is open
      */
-    @Override
     public boolean isOpen(int row, int col) {
         return this.grid.get(row, col) == 1;
     }
@@ -218,16 +229,14 @@ public class Percolation implements PercolationInterface {
      * @param col column number
      * @return if this site is part of full set
      */
-    @Override
     public boolean isFull(int row, int col) {
         int current = this.grid.convert2Dto1D(row, col);
-        return this.uf.connected(current, TOP_VIRT);
+        return (this.uf.connected(current, TOP_VIRT) && this.topUf.connected(current, TOP_VIRT));
     }
 
     /**
      * @return number of open sites in the grid
      */
-    @Override
     public int numberOfOpenSites() {
         return this.openCount;
     }
@@ -235,7 +244,6 @@ public class Percolation implements PercolationInterface {
     /**
      * @return if grid percolates or not
      */
-    @Override
     public boolean percolates() {
         return this.uf.connected(TOP_VIRT, BOT_VIRT);
     }

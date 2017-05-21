@@ -30,7 +30,7 @@
 				<version>3.0.0</version>
 
                 <configuration>
-                    <finalName>pack</finalName>
+                    <finalName>percolation</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
 						<descriptor>zip.xml</descriptor>
@@ -53,6 +53,11 @@
 			<artifactId>algs</artifactId>
 			<version>4</version>
 		</dependency>
-		
+
+        <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>7.7</version>
+        </dependency>
 	</dependencies>
 </project>
