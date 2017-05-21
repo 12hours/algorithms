@@ -118,6 +118,7 @@ public class Deque<Item> implements Iterable<Item> {
 
             @Override
             public Item next() {
+                if (!hasNext()) throw new java.util.NoSuchElementException();
                 Node next = current;
                 current = current.next;
                 return next.item;

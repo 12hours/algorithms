@@ -8,7 +8,7 @@ public class Permutation {
     public static void main(String[] args) {
         RandomizedQueue<String> queue = new RandomizedQueue<>();
 
-        int numberToRead = StdIn.readInt();
+        int numberToRead = Integer.decode(args[0]);
         while (numberToRead > 0){
             String input = StdIn.readString();
             queue.enqueue(input);

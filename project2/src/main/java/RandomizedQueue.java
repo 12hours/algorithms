@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.StdRandom;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -68,7 +69,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         int random_index;
         do {
             random_index = StdRandom.uniform(0, this.next_empty);
-        } while (this.array[random_index] != null);
+        } while (this.array[random_index] == null);
         Item item_to_return = this.array[random_index];
         this.array[random_index] = null;
         this.size--;
@@ -121,6 +122,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return iterator;
     }
 
-    public static void main(String[] args) {
+    public static <T> void main(String[] args) {
     }
+
 }

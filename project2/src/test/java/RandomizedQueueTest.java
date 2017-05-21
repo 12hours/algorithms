@@ -101,4 +101,14 @@ public class RandomizedQueueTest {
         Iterator<Integer> iter = queue.iterator();
         assertTrue(false);
     }
+
+    @Test
+    public void dequeue() throws Exception {
+        queue.enqueue(42);
+        queue.enqueue(12);
+        queue.enqueue(28);
+
+        assertTrue(queue.dequeue() != null);
+
+    }
 }
