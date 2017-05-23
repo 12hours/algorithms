@@ -5,7 +5,10 @@
 	<groupId>my.algo</groupId>
 	<artifactId>project1</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <modules>
+        <module>../project3</module>
+    </modules>
+    <packaging>pom</packaging>
 
 	<name>project1</name>
 	<url>http://maven.apache.org</url>
