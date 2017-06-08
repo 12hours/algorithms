@@ -4,6 +4,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,8 +12,10 @@ import java.util.List;
  */
 public class FastCollinearPoints {
     private static final int MIN_SEG_SIZE = 3;
-    Point[] points;
-    List<LineSegment> lineSegments;
+    private Point[] points;
+    private List<LineSegment> lineSegments;
+    private List<Point> pointsList;
+    private List<Point> removedList;
 
     /**
      * finds all line segments containing 4 or more points
@@ -21,6 +24,8 @@ public class FastCollinearPoints {
     public FastCollinearPoints(Point[] points) {
         this.points = points;
         this.lineSegments = new ArrayList<>();
+        this.pointsList = new ArrayList<>(Arrays.asList(points));
+        this.removedList = new ArrayList<>();
         findPoints();
 
     }
@@ -31,40 +36,61 @@ public class FastCollinearPoints {
 
         for (int i = 0; i < this.points.length; i++){
             Point point0 = this.points[i];
-            Arrays.sort(workArray, point0.slopeOrder());
-            findSegments(workArray);
+            this.pointsList.sort(point0.slopeOrder());
+            findSegments();
+//            this.pointsList.remove(0);
+//            removedList.add(point0);
         }
     }
 
-    private void findSegments(Point[] workArray) {
-        Point point0 = workArray[0];
+    private void findSegments() {
+        Point point0 = this.pointsList.get(0);
+        boolean segmentAdded = false;
+
         List<Point> segment = new ArrayList<>();
         int start = 1, end = start;
 
-        while (start < workArray.length) {
-            double slope = point0.slopeTo(workArray[start]);
-            while (end + 1 < workArray.length && point0.slopeTo(workArray[end + 1]) == slope){
+        while (start < this.pointsList.size()) {
+            double slope = point0.slopeTo(this.pointsList.get(start));
+            while (end + 1 < this.pointsList.size() && point0.slopeTo(this.pointsList.get(end + 1)) == slope){
                 end++;
             }
             if ((end - start) > 1){
                 segment.add(point0);
                 for (int i = start; i <= end; i++){
-                    segment.add(workArray[i]);
-                    processSegment(segment);
+                    segment.add(this.pointsList.get(i));
                 }
+                segmentAdded = processSegment(segment);
             }
             segment = new ArrayList<>();
             start = end + 1;
             end = start;
         }
+        if (segmentAdded){
+            removedList.add(point0);
+        }
     }
 
-    private void processSegment(List<Point> segment) {
-        segment.sort(segment.get(0).slopeOrder());
+    private boolean processSegment(List<Point> segment) {
+
+        Collections.sort(segment);
         Point point0 = segment.get(0);
         Point point1 = segment.get(segment.size()-1);
         LineSegment seg = new LineSegment(point0, point1);
-        this.lineSegments.add(seg);
+        if (checkIfNotRemoved(segment)) {
+            this.lineSegments.add(seg);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkIfNotRemoved(List<Point> segment) {
+        for (Point pointSegment : segment){
+            for (Point pointRemoved : this.removedList){
+                if (pointRemoved.compareTo(pointSegment) == 0)  return false;
+            }
+        }
+        return true;
     }
 
 
