@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class KdTree {
-    private class PointHolder {
+    private static class PointHolder {
         public static final boolean X = true;
         public static final boolean Y = false;
 
@@ -14,6 +14,8 @@ public class KdTree {
         private PointHolder left;
         private PointHolder right;
 
+        private RectHV rectangle;
+
         public RectHV getRectangle() {
             return rectangle;
         }
@@ -21,8 +23,6 @@ public class KdTree {
         public void setRectangle(RectHV rectangle) {
             this.rectangle = rectangle;
         }
-
-        private RectHV rectangle;
 
         public boolean getDivAxis() {
             return coordinate;
@@ -58,7 +58,7 @@ public class KdTree {
 
     }
 
-    private class TwoDTree {
+    private static class TwoDTree {
         // Division coordinate of the phantom point before root; root will be divided on inverted coordinate;
         private static final boolean BEFORE_ROOT_COORDINATE = PointHolder.Y;
         private final double[] BOARD = new double[]{0.0, 0.0, 1.0, 1.0};
